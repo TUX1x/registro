@@ -135,6 +135,9 @@ TEMPLATE_HTML = '''
         {% endfor %}
     </table>
 </div>
+<p style="text-align:center; font-size:14px; color:#888; margin-top: 40px;">
+    Hecho por Omar Treviño y Liber García
+</p>
 </body>
 </html>
 '''
