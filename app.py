@@ -192,16 +192,73 @@ def validar(id_invitado):
     c = conn.cursor()
     c.execute("SELECT nombre, validado FROM invitados WHERE id = ?", (id_invitado,))
     row = c.fetchone()
+    conn.close()
+    
     if not row:
-        return "Código QR no válido"
+        return '''
+        <html>
+        <head><title>QR No válido</title></head>
+        <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background:#ffe6e6;">
+            <h1 style="color: #e74c3c;">Código QR no válido</h1>
+            <p>Por favor, verifique que el código sea correcto.</p>
+        </body>
+        </html>
+        '''
+    
     nombre, validado = row
     if validado:
-        return f"{nombre} ya ingresó."
+        mensaje = f"{nombre} ya ingresó."
+        color = "#f39c12"  # naranja
     else:
+        mensaje = f"Acceso permitido: {nombre}"
+        color = "#27ae60"  # verde
+        # Marcar como validado
+        conn = sqlite3.connect("invitados.db")
+        c = conn.cursor()
         c.execute("UPDATE invitados SET validado = 1 WHERE id = ?", (id_invitado,))
         conn.commit()
         conn.close()
-        return f"Acceso permitido: {nombre}"
+        
+    return f'''
+    <html>
+    <head>
+        <title>Validación de Invitado</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                background: #f4f6f8;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }}
+            .container {{
+                background: white;
+                padding: 40px;
+                border-radius: 15px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                text-align: center;
+                max-width: 400px;
+            }}
+            h1 {{
+                color: {color};
+                margin-bottom: 20px;
+            }}
+            p {{
+                font-size: 1.2em;
+                color: #555;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>{mensaje}</h1>
+            <p>Gracias por asistir a la fiesta.</p>
+        </div>
+    </body>
+    </html>
+    '''
 
 @app.route("/eliminar", methods=["POST"])
 def eliminar():
