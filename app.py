@@ -151,7 +151,7 @@ def registrar():
         else:
             id_invitado = str(uuid.uuid4())
             qr_filename = f"{QR_FOLDER}/{id_invitado}.png"
-            url_qr = f"https://registro.onrender.com/validar/{codigo}"
+            url = f"https://qr-fiesta.onrender.com/validar/{codigo}"
             qr = qrcode.make(url_qr)
             qr.save(qr_filename)
 
