@@ -11,6 +11,9 @@ PDF_FOLDER = "pdfs"
 os.makedirs(QR_FOLDER, exist_ok=True)
 os.makedirs(PDF_FOLDER, exist_ok=True)
 
+# Usar variable de entorno para la URL base, por defecto localhost
+BASE_URL = os.getenv("BASE_URL", "http://localhost:5000")
+
 def init_db():
     conn = sqlite3.connect("invitados.db")
     c = conn.cursor()
@@ -151,7 +154,7 @@ def registrar():
         else:
             id_invitado = str(uuid.uuid4())
             qr_filename = f"{QR_FOLDER}/{id_invitado}.png"
-            url = f"https://qr-fiesta.onrender.com/validar/{codigo}"
+            url_qr = f"{BASE_URL}/validar/{id_invitado}"
             qr = qrcode.make(url_qr)
             qr.save(qr_filename)
 
